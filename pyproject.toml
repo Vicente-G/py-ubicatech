@@ -1,0 +1,102 @@
+[project]
+name = "py-ubicatech"
+version = "0.1.0"
+description = "Python API based on Flask and SQLAlchemy"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "colorama>=0.4.6",
+    "dotenv>=0.9.9",
+    "flask>=3.1.0",
+    "gunicorn>=23.0.0",
+    "logging>=0.4.9.6",
+    "sqlalchemy>=2.0.39",
+]
+
+[dependency-groups]
+dev = [
+  "bandit>=1.8.3",
+  "pre-commit>=4.2.0",
+  "pytest>=8.3.5",
+  "ruff>=0.11.2",
+  "taskipy>=1.14.1",
+]
+
+[tool.taskipy.tasks]
+start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
+dev = "python src/__init__.py --debug"
+githooks = "python -m pre-commit install -t pre-commit -t pre-push -t commit-msg"
+format = "python -m ruff format --check ./src ./tests"
+format-fix = "python -m ruff format ./src ./tests"
+lint = "python -m ruff check ./src ./tests"
+lint-fix = "python -m ruff check --fix ./src ./tests"
+sec-lint = "python -m bandit -r ./src"
+check = "task format && task lint && task sec-lint"
+fix = "task format-fix && task lint-fix"
+test = "python -m pytest -v ./tests"
+
+[tool.pytest.ini_options]
+addopts = "-vvv"
+testpaths = "tests"
+
+[tool.ruff]
+extend-exclude = [
+  "__pycache__",
+  "build",
+  "dist",
+]
+target-version = "py313"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+extend-select = [
+  "C4",
+  "D200",
+  "D201",
+  "D204",
+  "D205",
+  "D206",
+  "D210",
+  "D211",
+  "D213",
+  "D300",
+  "D400",
+  "D402",
+  "D403",
+  "D404",
+  "D419",
+  "E",
+  "F",
+  "FURB",
+  "G010",
+  "I",
+  "INP001",
+  "N805",
+  "PERF101",
+  "PERF102",
+  "PERF401",
+  "PERF402",
+  "PGH004",
+  "PGH005",
+  "PIE794",
+  "PIE796",
+  "PIE807",
+  "PIE810",
+  "PLR",
+  "RET502",
+  "RET503",
+  "RET504",
+  "RET505",
+  "RUF015",
+  "RUF032",
+  "RUF033",
+  "RUF034",
+  "RUF100",
+  "S101",
+  "T20",
+  "UP",
+  "W",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["S101"]
