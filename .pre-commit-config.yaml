@@ -4,10 +4,10 @@ default_language_version:
   python: python3.10
 
 repos:
-  - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.19.1
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.4.1
     hooks:
-      - id: gitlint
+      - id: commitizen
         stages: [commit-msg]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -17,6 +17,7 @@ repos:
         args: [--branch, main, --branch, dev]
       - id: check-added-large-files
       - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -39,10 +40,11 @@ repos:
         stages: [pre-push]
         exclude: ^tests/
         args: [-c, pyproject.toml, -r, ./src]
-  
+
   - repo: local
     hooks:
       - id: pytest
+        stages: [pre-push]
         name: pytest
         entry: uv run pytest -v ./tests
         language: system
