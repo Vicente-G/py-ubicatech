@@ -6,11 +6,18 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
+    "alembic>=1.15.1",
+    "bcrypt>=4.3.0",
+    "bleach>=6.2.0",
     "colorama>=0.4.6",
-    "dotenv>=0.9.9",
+    "email-validator>=2.2.0",
     "flask>=3.1.0",
+    "flask-login>=0.6.3",
     "gunicorn>=23.0.0",
     "logging>=0.4.9.6",
+    "psycopg2-binary>=2.9.10",
+    "pydantic>=2.10.6",
+    "python-dotenv>=1.1.0",
     "sqlalchemy>=2.0.39",
 ]
 
@@ -24,9 +31,13 @@ dev = [
 ]
 
 [tool.taskipy.tasks]
-start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
-dev = "python src/__init__.py --debug"
+start = "python -m gunicorn -b 0.0.0.0:8080 'src.app:create_app()'"
+dev = "python src/__init__.py"
 githooks = "pre-commit install -t pre-commit -t pre-push -t commit-msg"
+db = "alembic -c alembic/alembic.ini -x db=dev"
+db-upgrade = "task db -- upgrade head"
+db-downgrade = "task db -- downgrade -1"
+db-revision = "task db -- revision -m 'auto' --autogenerate --rev-id=r_$(date '+%Y%m%d%H%M%S')"
 format = "python -m ruff format --check ./src ./tests"
 format-fix = "python -m ruff format ./src ./tests"
 lint = "python -m ruff check ./src ./tests"
@@ -35,6 +46,8 @@ sec-lint = "python -m bandit -r ./src"
 check = "task format && task lint && task sec-lint"
 fix = "task format-fix && task lint-fix"
 test = "python -m pytest -v ./tests"
+test-db = "alembic -c alembic/alembic.ini -x db=test"
+test-db-upgrade = "task test-db -- upgrade head"
 
 [tool.pytest.ini_options]
 addopts = "-vvv"
