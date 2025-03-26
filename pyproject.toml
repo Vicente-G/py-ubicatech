@@ -25,7 +25,7 @@ dev = [
 [tool.taskipy.tasks]
 start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
 dev = "python src/__init__.py --debug"
-githooks = "python -m pre-commit install -t pre-commit -t pre-push -t commit-msg"
+githooks = "pre-commit install -t pre-commit -t pre-push -t commit-msg"
 format = "python -m ruff format --check ./src ./tests"
 format-fix = "python -m ruff format ./src ./tests"
 lint = "python -m ruff check ./src ./tests"
