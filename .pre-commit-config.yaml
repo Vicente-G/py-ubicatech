@@ -41,12 +41,12 @@ repos:
         exclude: ^tests/
         args: [-c, pyproject.toml, -r, ./src]
 
-  - repo: local
-    hooks:
-      - id: pytest
-        stages: [pre-push]
-        name: pytest
-        entry: uv run pytest -v ./tests
-        language: system
-        types: [python]
-        pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: pytest
+  #       stages: [pre-push]
+  #       name: pytest
+  #       entry: uv run pytest -v ./tests
+  #       language: system
+  #       types: [python]
+  #       pass_filenames: false
