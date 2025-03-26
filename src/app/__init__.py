@@ -7,10 +7,11 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_login import LoginManager
 
+from ..config import config_manager
+
 # Third-party imports
 # App imports
 from .database import DatabaseManager
-from ..config import config_manager
 
 # Load extensions
 login_manager = LoginManager()

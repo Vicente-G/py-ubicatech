@@ -38,10 +38,10 @@ db = "alembic -c alembic/alembic.ini -x db=dev"
 db-upgrade = "task db -- upgrade head"
 db-downgrade = "task db -- downgrade -1"
 db-revision = "task db -- revision -m 'auto' --autogenerate --rev-id=r_$(date '+%Y%m%d%H%M%S')"
-format = "python -m ruff format --check ./src ./tests"
-format-fix = "python -m ruff format ./src ./tests"
-lint = "python -m ruff check ./src ./tests"
-lint-fix = "python -m ruff check --fix ./src ./tests"
+format = "python -m ruff format --check ./src ./tests ./alembic"
+format-fix = "python -m ruff format ./src ./tests ./alembic"
+lint = "python -m ruff check ./src ./tests ./alembic"
+lint-fix = "python -m ruff check --fix ./src ./tests ./alembic"
 sec-lint = "python -m bandit -r ./src"
 check = "task format && task lint && task sec-lint"
 fix = "task format-fix && task lint-fix"
@@ -114,3 +114,4 @@ extend-select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["S101"]
+"alembic/*.py" = ["INP001"]

@@ -1,14 +1,13 @@
-"""init
+"""
+init.
 
 Revision ID: 1_init
 Revises:
 Create Date:
-
 """
 
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "1_init"
