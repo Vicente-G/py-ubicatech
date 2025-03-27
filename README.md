@@ -30,12 +30,29 @@ uv run task githooks
 
 ## Usage
 
-For launching the server in debug mode, run the following:
+1. Run a PostgreSQL instance, for example with docker:
 ```sh
 uv run task dev
+docker run -d -p 5432:5432 --name psql17 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=ubicatech postgres:17.4
 ```
 
 In general, to use any other command defined on the `pyproject.toml` file:
+2. Run the migration command, in this case, migrate for development with:
+```sh
+uv run task db-upgrade
+```
+
+3. (Optional) Check more on the migration made using `\dt` on this client:
+```sh
+PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -w ubicatech
+```
+
+4. Finally, you can run the development server with gunicorn using:
+```sh
+uv run task start
+```
+
+Additionally, to use any other command defined on the `pyproject.toml` file:
 ```sh
 uv run task <command-name>
 ```
