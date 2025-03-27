@@ -12,7 +12,6 @@ from dotenv import dotenv_values
 from sqlalchemy import engine_from_config, pool
 
 # App imports
-from src.app.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -45,7 +44,7 @@ if db_env not in ["dev", "test"]:
 
 def get_dot_env():
     cwd = Path(os.getcwd())
-    env_file = Path(cwd, ".flaskenv")
+    env_file = Path(cwd, ".env")
     return dotenv_values(env_file)
 
 
@@ -66,6 +65,8 @@ elif db_env == "test":
 # so we can properly import our app's `models.Base` below
 cwd = os.getcwd()
 sys.path.append(cwd)
+
+from src.app.models import Base  # noqa: E402
 
 target_metadata = Base.metadata
 
