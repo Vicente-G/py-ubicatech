@@ -5,10 +5,10 @@ from flask import Blueprint
 
 # Third-party imports
 # App imports
-from app import db_manager, login_manager
-
-from .models import User
-from .views import (
+from src.app import db_manager, login_manager
+from src.app.models import User
+from src.app.utils import custom_errors
+from src.app.views import (
     account_management_views,
     error_views,
     static_views,
@@ -36,7 +36,7 @@ def load_user(user_id):
     """Load user by ID."""
     if user_id and user_id != "None":
         return User.query.filter_by(user_id=user_id).first()
-    raise Exception("User's ID not found")
+    raise custom_errors.UserNotFoundError()
 
 
 # Error views

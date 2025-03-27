@@ -34,3 +34,8 @@ class CouldNotVerifyLogin(Error):
 class PermissionsDeniedError(Error):
     message = "Sorry, you don't have the necessary permissions. Please contact your admin or customer support."  # noqa: E501
     internal_error_code = 40301
+
+
+class UserNotFoundError(Error):
+    message = "User's ID not found on database. Try again with another ID."
+    internal_error_code = 40401
