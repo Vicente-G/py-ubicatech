@@ -7,11 +7,10 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_login import LoginManager
 
-from ..config import config_manager
-
 # Third-party imports
 # App imports
-from .database import DatabaseManager
+from src.app.database import DatabaseManager
+from src.config import config_manager
 
 # Load extensions
 login_manager = LoginManager()
@@ -41,7 +40,9 @@ def load_logs(app):
     app.logger.info("app startup")
 
 
-def create_app(config_name):
+def create_app(config_name=None):
+    if config_name is None:
+        config_name = os.getenv("FLASK_CONFIG") or "dev"
     app = Flask(__name__)
     app.config.from_object(config_manager[config_name])
 
@@ -52,7 +53,7 @@ def create_app(config_name):
 
     db_manager.init_app(app)
 
-    from . import routes
+    from src.app import routes
 
     app.register_blueprint(routes.bp)
 
