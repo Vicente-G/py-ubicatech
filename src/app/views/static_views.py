@@ -7,7 +7,7 @@ from flask import render_template
 from flask_login import login_required
 
 # App imports
-from ..permissions import roles_required
+from src.app.permissions import roles_required
 
 
 def index():

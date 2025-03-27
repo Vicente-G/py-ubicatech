@@ -4,11 +4,11 @@ from functools import wraps
 # Core Flask imports
 from flask_login import current_user
 
-from .utils.custom_errors import PermissionsDeniedError
+from src.app.utils.custom_errors import PermissionsDeniedError
 
 # Third-party imports
 # App imports
-from .utils.error_utils import get_business_requirement_error_response
+from src.app.utils.error_utils import get_business_requirement_error_response
 
 
 def roles_required(roles):

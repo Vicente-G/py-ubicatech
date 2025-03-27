@@ -8,9 +8,9 @@ from flask_login import current_user, login_required, login_user, logout_user
 from pydantic import ValidationError
 
 # App imports
-from ..services import account_management_services
-from ..utils import custom_errors, sanitization
-from ..utils.error_utils import (
+from src.app.services import account_management_services
+from src.app.utils import custom_errors, sanitization
+from src.app.utils.error_utils import (
     get_business_requirement_error_response,
     get_db_error_response,
     get_validation_error_response,

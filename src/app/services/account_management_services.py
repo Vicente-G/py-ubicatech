@@ -6,11 +6,10 @@
 import bcrypt
 
 # App imports
-from app import db_manager as db
-
-from ..models import Account, User
-from ..utils import custom_errors
-from ..utils.validators import AccountValidator, EmailValidator
+from src.app import db_manager as db
+from src.app.models import Account, User
+from src.app.utils import custom_errors
+from src.app.utils.validators import AccountValidator, EmailValidator
 
 
 def get_user_profile_from_user_model(user_model):
