@@ -14,7 +14,7 @@ class AccountValidator(BaseModel):
     password: str = ...
 
     @field_validator("username")
-    def username_valid(self, cls, v):
+    def username_valid(cls, v):  # noqa: N805
         if not v[0].isalpha():
             raise ValueError("Username must start with a letter")
         if not v.isalnum():
