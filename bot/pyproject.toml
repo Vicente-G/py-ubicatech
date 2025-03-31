@@ -1,0 +1,15 @@
+[project]
+name = "solo-uno-bot"
+version = "0.1.0"
+description = "Scraper bot CLI for the ubicatech's SoloUno API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.32.3",
+]
+
+[tool.taskipy.tasks]
+bot = "python cli.py"
+help = "python cli.py --help"
+check = "echo Remember to go back to the home folder for quality checks"
+fix = "echo Remember to go back to the home folder for quality checks"
