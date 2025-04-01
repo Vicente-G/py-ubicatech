@@ -1,5 +1,4 @@
 import argparse
-import json
 
 from src.components import get_cpu
 from src.models.routes import (
@@ -14,6 +13,7 @@ from src.models.routes import (
     SSD_TYPES,
 )
 from src.tools import ignore_wildcard, remove_nulls
+from src.tools.migrate_helper import generate_migration_from
 
 
 def main():
@@ -105,9 +105,9 @@ def main():
     max_price, min_price = args.pop(-1)[1], args.pop(-1)[1]
     if max_price or min_price:
         args.append(("price_range", (min_price, max_price)))
+
     if component == "cpu":
-        with open("temp.json", "w") as file:
-            file.write(json.dumps(get_cpu(**dict(filter(remove_nulls, args)))))
+        generate_migration_from(get_cpu(**dict(filter(remove_nulls, args))))
     else:
         raise ValueError("Not Implemented Error: Only 'cpu' is supported for now.")
 
