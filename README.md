@@ -32,12 +32,11 @@ uv run task githooks
 
 1. Run a PostgreSQL instance, for example with docker:
 ```sh
-uv run task dev
-docker run -d -p 5432:5432 --name psql17 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=ubicatech postgres:17.4
+docker run -d -p 5432:5432 --name pg17 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=ubicatech postgres:17.4
 ```
 
 In general, to use any other command defined on the `pyproject.toml` file:
-2. Run the migration command, in this case, migrate for development with:
+2. Run the migration command, in this case, migrate with:
 ```sh
 uv run task db-upgrade
 ```
@@ -47,7 +46,7 @@ uv run task db-upgrade
 PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -w ubicatech
 ```
 
-4. Finally, you can run the development server with gunicorn using:
+4. Finally, you can run the server with gunicorn using:
 ```sh
 uv run task start
 ```

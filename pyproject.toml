@@ -6,11 +6,12 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
-    "atlas-provider-sqlalchemy>=0.2.4",
+    "alembic>=1.15.1",
     "colorama>=0.4.6",
     "flask>=3.1.0",
     "gunicorn>=23.0.0",
     "logging>=0.4.9.6",
+    "psycopg2-binary>=2.9.10",
     "python-dotenv>=1.1.0",
     "sqlalchemy>=2.0.39",
     "sqlmodel>=0.0.24",
@@ -21,19 +22,24 @@ dev = [
   "bandit>=1.8.3",
   "pre-commit>=4.2.0",
   "pytest>=8.3.5",
+  "pytest-mock>=3.14.0",
   "ruff>=0.11.2",
   "taskipy>=1.14.1",
 ]
 
 [tool.taskipy.tasks]
 start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
-dev = "python src/__init__.py --debug"
+dev = "python src/__init__.py --debug --host 0.0.0.0"
 githooks = "pre-commit install -t pre-commit -t pre-push -t commit-msg"
-format = "python -m ruff format --check ./src ./tests"
-format-fix = "python -m ruff format ./src ./tests"
-lint = "python -m ruff check ./src ./tests"
-lint-fix = "python -m ruff check --fix ./src ./tests"
-sec-lint = "python -m bandit -r ./src"
+db = "alembic -c alembic/alembic.ini"
+db-revision = "task db -- revision -m 'autogen' --autogenerate"
+db-upgrade = "task db -- upgrade head"
+db-downgrade = "task db -- downgrade -1"
+format = "python -m ruff format --check ./src ./tests ./bot ./alembic"
+format-fix = "python -m ruff format ./src ./tests ./bot ./alembic"
+lint = "python -m ruff check ./src ./tests ./bot ./alembic"
+lint-fix = "python -m ruff check --fix ./src ./tests ./bot ./alembic"
+sec-lint = "python -m bandit -r ./src ./bot"
 check = "task format && task lint && task sec-lint"
 fix = "task format-fix && task lint-fix"
 test = "python -m pytest -v ./tests"
@@ -49,6 +55,8 @@ extend-exclude = [
   "dist",
 ]
 target-version = "py313"
+line-length = 100
+indent-width = 4
 src = ["src", "tests"]
 
 [tool.ruff.lint]
@@ -103,3 +111,8 @@ extend-select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["S101"]
+"alembic/*.py" = ["F403", "D400", "INP001"]
+"bot/*.py" = ["INP001"]
+
+[tool.uv.workspace]
+members = ["bot"]
