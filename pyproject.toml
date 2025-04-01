@@ -39,10 +39,10 @@ db-upgrade = "task alembic -- upgrade head --sql > migrations/atlas/sql/01_schem
 db-downgrade = "task alembic -- downgrade -1"
 db-check = "task atlas -- schema inspect -w --url ${PG_URL}"
 db-migrate = "task atlas -- migrate apply --dir migrations/atlas --url ${PG_URL}"
-format = "python -m ruff format --check ./src ./tests ./bot ./alembic"
-format-fix = "python -m ruff format ./src ./tests ./bot ./alembic"
-lint = "python -m ruff check ./src ./tests ./bot ./alembic"
-lint-fix = "python -m ruff check --fix ./src ./tests ./bot ./alembic"
+format = "python -m ruff format --check ./src ./tests ./bot ./migrations"
+format-fix = "python -m ruff format ./src ./tests ./bot ./migrations"
+lint = "python -m ruff check ./src ./tests ./bot ./migrations"
+lint-fix = "python -m ruff check --fix ./src ./tests ./bot ./migrations"
 sec-lint = "python -m bandit -r ./src ./bot"
 check = "task format && task lint && task sec-lint"
 fix = "task format-fix && task lint-fix"
@@ -114,9 +114,9 @@ extend-select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*.py" = ["S101"]
-"alembic/*.py" = ["F403", "D400", "INP001"]
 "bot/*.py" = ["INP001"]
+"migrations/alembic/*.py" = ["F403", "D400", "INP001"]
+"tests/*.py" = ["S101"]
 
 [tool.uv.workspace]
 members = ["bot"]
