@@ -49,9 +49,7 @@ def update_existing_cpu(cpu_id):
     current_app.logger.info(f"HTTP/PUT: Updating CPU with ID {cpu_id}")
     data = request.get_json()
     if not data:
-        current_app.logger.warning(
-            f"HTTP/PUT: Invalid input for updating CPU with ID {cpu_id}"
-        )
+        current_app.logger.warning(f"HTTP/PUT: Invalid input for updating CPU with ID {cpu_id}")
         return jsonify({"error": "Invalid input"}), 400
     updated = db_exec(update_cpu, cpu_id, data)
     if updated:
@@ -66,9 +64,7 @@ def delete_existing_cpu(cpu_id):
     current_app.logger.info(f"HTTP/DELETE: Deleting CPU with ID {cpu_id}")
     deleted = db_exec(delete_cpu, cpu_id)
     if deleted:
-        current_app.logger.info(
-            f"HTTP/DELETE: CPU with ID {cpu_id} deleted successfully"
-        )
+        current_app.logger.info(f"HTTP/DELETE: CPU with ID {cpu_id} deleted successfully")
         return jsonify({"message": "CPU deleted"}), 200
     current_app.logger.warning(f"HTTP/DELETE: CPU with ID {cpu_id} not found")
     return jsonify({"error": "CPU not found"}), 404

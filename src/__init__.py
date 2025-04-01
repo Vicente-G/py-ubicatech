@@ -20,9 +20,7 @@ def create_app():
 
     @app.errorhandler(404)
     def handle_404(e):
-        current_app.logger.warning(
-            f"HTTP/{request.method}: Route not found, redirecting to home"
-        )
+        current_app.logger.warning(f"HTTP/{request.method}: Route not found, redirecting to home")
         return redirect(url_for("docs.home")), 302
 
     if __name__ != "__main__":
@@ -34,9 +32,7 @@ def create_app():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the Flask app.")
-    parser.add_argument(
-        "--debug", action="store_true", help="Run the app in debug mode."
-    )
+    parser.add_argument("--debug", action="store_true", help="Run the app in debug mode.")
     parser.add_argument("--host", type=str, help="Host to run the app on.")
     args = parser.parse_args()
 
