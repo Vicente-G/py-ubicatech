@@ -107,7 +107,7 @@ def main():
         args.append(("price_range", (min_price, max_price)))
 
     if component == "cpu":
-        generate_migration_from(get_cpu(**dict(filter(remove_nulls, args))))
+        generate_migration_from(get_cpu(**dict(filter(remove_nulls, args))),"../migrations/atlas/sql", "cpu")
     else:
         raise ValueError("Not Implemented Error: Only 'cpu' is supported for now.")
 
