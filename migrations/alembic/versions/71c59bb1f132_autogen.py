@@ -1,9 +1,9 @@
 """
 autogen
 
-Revision ID: f3ea16a50cdf
+Revision ID: 71c59bb1f132
 Revises:
-Create Date: 2025-03-28 12:19:38.156719
+Create Date: 2025-04-01 14:06:37.256286
 
 """
 
@@ -14,7 +14,7 @@ import sqlmodel
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "f3ea16a50cdf"
+revision: str = "71c59bb1f132"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -28,16 +28,21 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("name", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("brand", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("image", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("price_usd", sa.Float(), nullable=False),
+        sa.Column("price_clp", sa.Float(), nullable=False),
+        sa.Column("solotodo_link", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
         sa.Column("cores", sa.Integer(), nullable=False),
         sa.Column("threads", sa.Integer(), nullable=False),
-        sa.Column("base_clock", sa.Float(), nullable=False),
-        sa.Column("boost_clock", sa.Float(), nullable=True),
+        sa.Column("base_clock", sa.Integer(), nullable=False),
+        sa.Column("boost_clock", sa.Integer(), nullable=False),
         sa.Column("tdp", sa.Integer(), nullable=False),
         sa.Column("socket", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("price", sa.Float(), nullable=False),
         sa.Column("architecture", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-        sa.Column("characteristics", sqlmodel.sql.sqltypes.AutoString(), nullable=True),
-        sa.Column("integrated_graphics", sa.Boolean(), nullable=True),
+        sa.Column("integrated_graphics", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("cpu_cooler", sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+        sa.Column("benchmark_single_core", sa.Integer(), nullable=False),
+        sa.Column("benchmark_multi_core", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

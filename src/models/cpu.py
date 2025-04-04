@@ -5,16 +5,21 @@ class CPU(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
     brand: str
+    image: str
+    price_usd: float
+    price_clp: float
+    solotodo_link: str
     cores: int
     threads: int
-    base_clock: float  # in GHz
-    boost_clock: float | None = None  # in GHz
-    tdp: int  # in watts
+    base_clock: int
+    boost_clock: int
+    tdp: int
     socket: str
-    price: float  # in CLP
     architecture: str
-    characteristics: str | None = None
-    integrated_graphics: bool | None = None
+    integrated_graphics: str
+    cpu_cooler: str
+    benchmark_single_core: int
+    benchmark_multi_core: int
 
 
 # Create a new CPU
