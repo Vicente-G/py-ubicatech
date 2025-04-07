@@ -1,11 +1,12 @@
 from src.config import REDIRECT_URL
 
 
-def cpu_schema(product_element):
+def cpu_schema(product_element, db_id):
     specs = product_element.get("specs")
     clp_prices = product_element.get("prices_per_currency")[0]
     id = product_element.get("id")
     return {
+        "id": db_id + 1,
         "name": product_element.get("name"),
         "brand": product_element.get("brand_name"),
         "image": product_element.get("picture_url"),

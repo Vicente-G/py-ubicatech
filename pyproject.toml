@@ -6,7 +6,6 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
-    "alembic>=1.15.1",
     "colorama>=0.4.6",
     "flask>=3.1.0",
     "gunicorn>=23.0.0",
@@ -19,6 +18,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "alembic>=1.15.1",
   "bandit>=1.8.3",
   "pre-commit>=4.2.0",
   "pytest>=8.3.5",
@@ -31,14 +31,18 @@ dev = [
 start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
 dev = "python src/__init__.py --debug --host 0.0.0.0"
 githooks = "pre-commit install -t pre-commit -t pre-push -t commit-msg"
-db = "alembic -c alembic/alembic.ini"
-db-revision = "task db -- revision -m 'autogen' --autogenerate"
-db-upgrade = "task db -- upgrade head"
-db-downgrade = "task db -- downgrade -1"
-format = "python -m ruff format --check ./src ./tests ./bot ./alembic"
-format-fix = "python -m ruff format ./src ./tests ./bot ./alembic"
-lint = "python -m ruff check ./src ./tests ./bot ./alembic"
-lint-fix = "python -m ruff check --fix ./src ./tests ./bot ./alembic"
+schema = "alembic -c migrations/alembic/alembic.ini"
+db = "atlas --config file://migrations/atlas/atlas.hcl"
+schema-rev = "task schema -- revision -m 'autogen' --autogenerate"
+schema-up = "task schema -- upgrade head --sql > migrations/atlas/data/schemas.sql"
+db-check = "task db -- --env local schema inspect -w"
+db-schema = "task db -- --env local migrate diff schema"
+db-manual = "task db -- --env local migrate new bot_data --edit"
+db-migrate = "task db -- --env local migrate apply"
+format = "python -m ruff format --check ./src ./tests ./bot ./migrations"
+format-fix = "python -m ruff format ./src ./tests ./bot ./migrations"
+lint = "python -m ruff check ./src ./tests ./bot ./migrations"
+lint-fix = "python -m ruff check --fix ./src ./tests ./bot ./migrations"
 sec-lint = "python -m bandit -r ./src ./bot"
 check = "task format && task lint && task sec-lint"
 fix = "task format-fix && task lint-fix"
@@ -110,9 +114,9 @@ extend-select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*.py" = ["S101"]
-"alembic/*.py" = ["F403", "D400", "INP001"]
 "bot/*.py" = ["INP001"]
+"migrations/alembic/*.py" = ["F403", "D400", "INP001"]
+"tests/*.py" = ["S101"]
 
 [tool.uv.workspace]
 members = ["bot"]
