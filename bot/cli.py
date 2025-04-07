@@ -60,7 +60,7 @@ def main():
         "--cpu-cooling",
         type=str,
         choices=CPU_COOLING_TYPES.keys(),
-        help="Procesor Cooling type. Available for components: pc.",
+        help="Processor Cooling type. Available for components: pc.",
     )
 
     parser.add_argument(
@@ -101,8 +101,11 @@ def main():
         help="Maximum price in USD for the component. Available for all components.",
     )
     args = parser.parse_args()._get_kwargs()
+
+    # Gather arguments that require modifications
     component = args.pop(0)[1][0]
-    max_price, min_price = args.pop(-1)[1], args.pop(-1)[1]
+    max_price = args.pop(-1)[1]
+    min_price = args.pop(-1)[1]
     if max_price or min_price:
         args.append(("price_range", (min_price, max_price)))
 

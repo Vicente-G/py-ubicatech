@@ -27,7 +27,7 @@ def component_between_price(component, price_range):
     if len(price_range) != PRICE_RANGE_LENGTH:
         raise ValueError(f"Invalid price range for component: {component}")
     start, end = price_range
-    if start is None or end is None:
+    if start is None and end is None:
         return None
     if start is None:
         return f"offer_price_usd_end={end}"
