@@ -30,7 +30,7 @@ def get_components(component, schemify, **kwargs):
         result = response.json()
         products.extend(list(map(extract_products, result.get("results"))))
 
-    return list(map(schemify, products))
+    return list(map(schemify, products, range(len(products))))
 
 
 def get_cpu(**kwargs):
