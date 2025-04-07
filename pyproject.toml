@@ -6,6 +6,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
+    "atlas-provider-sqlalchemy>=0.2.4",
     "colorama>=0.4.6",
     "flask>=3.1.0",
     "gunicorn>=23.0.0",
