@@ -1,16 +1,33 @@
-# TODO: Write a pipeline to migrate the schemas and the data right after
-data "external_schema" "sqlalchemy" {
-    program = [
-        "atlas-provider-sqlalchemy",
-        "--path", "./models", // replace with the path to your SQLAlchemy models
-        "--dialect", "postgresql"
-    ]
+variable "components" {
+  type = list(string)
+  default = [
+    "cpu",
+  ]
+}
+
+locals {
+  csv_data = [
+    for component in var.components :
+        split("\n", file("data/${component}.csv"))
+  ]
+}
+
+data "template_dir" "migrations" {
+  path = "migrations/atlas/revisions"
+  vars = zipmap(var.components, local.csv_data)
 }
 
 env "local" {
-    src = data.external_schema.sqlalchemy.url
-    dev = "postgres://usuario:contraseña@localhost:5432/nombre_de_tu_bd?search_path=public"
+    src = "file://migrations/atlas/data/schemas.sql"
+    url = "postgresql://postgres:postgres@localhost:5432/ubicatech"
+    dev = "postgresql://postgres:postgres@localhost:5432/ubicatech"
     migration {
-        dir = "file://migrations"
+        dir = data.template_dir.migrations.url
+    }
+}
+
+env "tf" {
+    migration {
+        dir = data.template_dir.migrations.url
     }
 }
