@@ -6,7 +6,6 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
-    "alembic>=1.15.1",
     "colorama>=0.4.6",
     "flask>=3.1.0",
     "gunicorn>=23.0.0",
@@ -19,6 +18,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "alembic>=1.15.1",
   "bandit>=1.8.3",
   "pre-commit>=4.2.0",
   "pytest>=8.3.5",
@@ -31,14 +31,14 @@ dev = [
 start = "python -m gunicorn -b 0.0.0.0:8080 'src:create_app()'"
 dev = "python src/__init__.py --debug --host 0.0.0.0"
 githooks = "pre-commit install -t pre-commit -t pre-push -t commit-msg"
-alembic = "alembic -c migrations/alembic/alembic.ini"
-atlas = "atlas --config file://migrations/atlas/atlas.hcl"
-db-revision = "task alembic -- revision -m 'autogen' --autogenerate"
-db-test = "task alembic -- upgrade head"
-db-upgrade = "task alembic -- upgrade head --sql > migrations/atlas/sql/01_schemas.sql"
-db-downgrade = "task alembic -- downgrade -1"
-db-check = "task atlas -- schema inspect -w --url ${PG_URL}"
-db-migrate = "task atlas -- migrate apply --dir migrations/atlas --url ${PG_URL}"
+schema = "alembic -c migrations/alembic/alembic.ini"
+db = "atlas --config file://migrations/atlas/atlas.hcl"
+schema-rev = "task schema -- revision -m 'autogen' --autogenerate"
+schema-up = "task schema -- upgrade head --sql > migrations/atlas/data/schemas.sql"
+db-check = "task db -- --env local schema inspect -w"
+db-schema = "task db -- --env local migrate diff schema"
+db-manual = "task db -- --env local migrate new bot_data --edit"
+db-migrate = "task db -- --env local migrate apply"
 format = "python -m ruff format --check ./src ./tests ./bot ./migrations"
 format-fix = "python -m ruff format ./src ./tests ./bot ./migrations"
 lint = "python -m ruff check ./src ./tests ./bot ./migrations"
