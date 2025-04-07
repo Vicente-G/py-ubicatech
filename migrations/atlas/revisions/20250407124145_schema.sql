@@ -1,0 +1,4 @@
+-- Create "alembic_version" table
+CREATE TABLE "public"."alembic_version" ("version_num" character varying(32) NOT NULL, CONSTRAINT "alembic_version_pkc" PRIMARY KEY ("version_num"));
+-- Create "cpu" table
+CREATE TABLE "public"."cpu" ("id" serial NOT NULL, "name" character varying NOT NULL, "brand" character varying NOT NULL, "image" character varying NOT NULL, "price_usd" double precision NOT NULL, "price_clp" double precision NOT NULL, "solotodo_link" character varying NOT NULL, "cores" integer NOT NULL, "threads" integer NOT NULL, "base_clock" integer NOT NULL, "boost_clock" integer NOT NULL, "tdp" integer NOT NULL, "socket" character varying NOT NULL, "architecture" character varying NOT NULL, "integrated_graphics" character varying NOT NULL, "cpu_cooler" character varying NOT NULL, "benchmark_single_core" integer NOT NULL, "benchmark_multi_core" integer NOT NULL, PRIMARY KEY ("id"));
