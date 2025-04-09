@@ -281,4 +281,25 @@ pyrightconfig.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,visualstudiocode
+
+# Miscs
 .DS_Store
+
+# Terraform
+**/.terraform/
+**/.terraform-version
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/*.tfvars.json
+**/*.tfplan
+**/*.tfplan.json
+**/*.tfplan.*
+**/*.tfstate.backup
+**/*.tfstate.backup.*
+!**/sample.terraform.tfvars
+
+# Ansible
+**/*.retry
+**/.cache/
+**/.ansible*
