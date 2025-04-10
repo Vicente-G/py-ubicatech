@@ -3,7 +3,7 @@
     aws_region: "{{ lookup('env', 'AWS_REGION') }}"
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
-    aws_ec2_instance_id: "{{ lookup('env', 'AWS_INSTANCE_ID') }}"
+    aws_ec2_instance_id: "{{ lookup('env', 'EC2_INSTANCE_ID') }}"
     aws_ecr_repo_url: "{{ lookup('env', 'ECR_REPO_URL') }}"
     aws_ecr_repo_password: "{{ lookup('env', 'ECR_REPO_PASSWORD') }}"
     aws_ecs_task_family: "{{ lookup('env', 'ECS_TASK_FAMILY') }}"
