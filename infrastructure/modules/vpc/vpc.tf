@@ -1,19 +1,19 @@
 # Create a VPC
-resource "aws_vpc" "ccVPC" {
+resource "aws_vpc" "ubicatechVPC" {
   instance_tenancy = "default"
   cidr_block       = var.vpc_cidr
   tags             = var.vpc_tags
 }
 
 resource "aws_internet_gateway" "ccIGW" {
-  vpc_id = aws_vpc.ccVPC.id
+  vpc_id = aws_vpc.ubicatechVPC.id
   tags = {
     Name    = "ccIGW"
     Project = "CC TF Demo"
   }
 }
 resource "aws_subnet" "ccPublicSubnet1" {
-  vpc_id            = aws_vpc.ccVPC.id
+  vpc_id            = aws_vpc.ubicatechVPC.id
   cidr_block        = var.public_subnet_cidrs[0]
   availability_zone = var.availability_zones[0]
   tags = {
@@ -22,7 +22,7 @@ resource "aws_subnet" "ccPublicSubnet1" {
   }
 }
 resource "aws_subnet" "ccPublicSubnet2" {
-  vpc_id            = aws_vpc.ccVPC.id
+  vpc_id            = aws_vpc.ubicatechVPC.id
   cidr_block        = var.public_subnet_cidrs[1]
   availability_zone = var.availability_zones[1]
   tags = {
@@ -32,7 +32,7 @@ resource "aws_subnet" "ccPublicSubnet2" {
 }
 
 resource "aws_subnet" "ccPrivateSubnet1" {
-  vpc_id            = aws_vpc.ccVPC.id
+  vpc_id            = aws_vpc.ubicatechVPC.id
   cidr_block        = var.private_subnet_cidrs[0]
   availability_zone = var.availability_zones[0]
   tags = {
@@ -41,7 +41,7 @@ resource "aws_subnet" "ccPrivateSubnet1" {
   }
 }
 resource "aws_subnet" "ccPrivateSubnet2" {
-  vpc_id            = aws_vpc.ccVPC.id
+  vpc_id            = aws_vpc.ubicatechVPC.id
   cidr_block        = var.private_subnet_cidrs[1]
   availability_zone = var.availability_zones[1]
   tags = {
@@ -51,14 +51,14 @@ resource "aws_subnet" "ccPrivateSubnet2" {
 }
 
 resource "aws_route_table" "ccPublicRT" {
-  vpc_id = aws_vpc.ccVPC.id
+  vpc_id = aws_vpc.ubicatechVPC.id
   tags = {
     Name    = "ccPublicRT"
     Project = "CC TF Demo"
   }
 }
 resource "aws_route_table" "ccPrivateRT1" {
-  vpc_id = aws_vpc.ccVPC.id
+  vpc_id = aws_vpc.ubicatechVPC.id
   tags = {
     Name    = "ccPrivateRT1"
     Project = "CC TF Demo"
