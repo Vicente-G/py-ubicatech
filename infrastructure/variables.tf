@@ -1,3 +1,30 @@
+variable "project_name" {
+  description = "Nombre del proyecto"
+  default     = "ubicatech"
+}
+
+variable "region" {
+  default = "us-east-1"
+}
+
+variable "vpc_cidr" {
+  default = "10.20.0.0/16"
+}
+
+variable "private_subnets" {
+  type    = list(string)
+  default = ["10.20.1.0/24", "10.20.2.0/24"]
+}
+
+variable "public_subnets" {
+  type    = list(string)
+  default = ["10.20.101.0/24", "10.20.102.0/24"]
+}
+
+variable "db_user" {}
+
+variable "db_password" {}
+
 variable "vpc_tags" {
   description = "Tags for VPC"
   type        = map(any)
