@@ -1,1 +1,59 @@
-# Ansible playbook to do post-provisioning tasks after terraform apply
+- hosts: localhost
+  vars:
+    aws_region: "{{ lookup('env', 'AWS_REGION') }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_KEY') }}"
+    aws_ec2_instance_id: "{{ lookup('env', 'AWS_INSTANCE_ID') }}"
+    aws_ecr_repo_url: "{{ lookup('env', 'ECR_REPO_URL') }}"
+    aws_ecr_repo_password: "{{ lookup('env', 'ECR_REPO_PASSWORD') }}"
+    aws_ecs_task_family: "{{ lookup('env', 'ECS_TASK_FAMILY') }}"
+    aws_rds_pg_url: "{{ lookup('env', 'RDS_PG_URL') }}"
+  tasks:
+    - name: Terminate EC2 instance launched for Atlas migration
+      amazon.aws.ec2_instance:
+        state: absent
+        instance_ids:
+        - "{{ aws_ec2_instance_id }}"
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
+
+    - name: Log into AWS ECR with gathered credentials
+      community.docker.docker_login:
+        registry_url: "{{ aws_ecr_repo_url }}"
+        username: AWS
+        password: "{{ aws_ecr_repo_password }}"
+        reauthorize: true
+
+    - name: Build docker image and push to AWS ECR
+      community.docker.docker_image:
+        state: present
+        source: build
+        push: true
+        repository: "{{ aws_ecr_repo_url }}"
+        name: ubicatech/py-server
+        build:
+          path: ./../..
+
+    - name: Create ECS task for image deployment on EC2
+      community.aws.ecs_taskdefinition:
+        family: "{{ aws_ecs_task_family }}"
+        launch_type: EC2
+        state: present
+        containers:
+          - name: pyserver
+            image: "{{ aws_ecr_repo_url }}"
+            memory: 512
+            cpu: 256
+            essential: true
+            portMappings:
+              - containerPort: 8000
+                hostPort: 8000
+            environment:
+              - name: PORT
+                value: 8000
+              - name: PG_URL
+                value: "{{ aws_rds_pg_url }}"
+        region: "{{ aws_region }}"
+        access_key: "{{ aws_access_key }}"
+        secret_key: "{{ aws_secret_key }}"
