@@ -1,4 +1,4 @@
-output "load_balancer_dns_name" {
-  description = "Load Balancer DNS Name"
-  value       = aws_lb.ccLoadBalancer.dns_name
+output "ec2_instance_id" {
+  description = "EC2 Instance ID"
+  value       = aws_instance.atlas_migration.id
 }
