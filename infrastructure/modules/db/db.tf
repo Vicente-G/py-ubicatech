@@ -4,10 +4,6 @@ resource "aws_db_subnet_group" "ccDBSubnetGroup" {
     var.cc_private_subnets[0].id,
     var.cc_private_subnets[1].id
   ]
-  tags = {
-    Name    = "ccDBSubnetGroup"
-    Project = "CC TF Demo"
-  }
 }
 
 resource "aws_security_group" "ccDBSecurityGroup" {
@@ -23,10 +19,11 @@ resource "aws_security_group" "ccDBSecurityGroup" {
       var.cc_private_subnet_cidrs[1]
     ]
   }
-  tags = {
-    Name    = "ccDBSecurityGroup"
-    Project = "CC TF Demo"
-  }
+}
+
+resource "random_password" "password" {
+  length  = 16
+  special = true
 }
 
 resource "aws_db_instance" "ccRDS" {
@@ -36,14 +33,10 @@ resource "aws_db_instance" "ccRDS" {
   allocated_storage      = 20
   storage_type           = "standard"
   engine                 = "postgres"
-  engine_version         = "12"
-  instance_class         = "db.t2.micro"
+  engine_version         = "17"
+  instance_class         = "db.t4g.micro"
   db_name                = var.db_name
-  username               = var.db_user_name
-  password               = var.db_user_password
+  username               = var.db_username
+  password               = random_password.password.result
   skip_final_snapshot    = true
-  tags = {
-    Name    = "ccRDS"
-    Project = "CC TF Demo"
-  }
 }
