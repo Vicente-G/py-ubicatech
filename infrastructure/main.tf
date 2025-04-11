@@ -2,7 +2,7 @@ terraform {
   backend "s3" {
     bucket         = "ubicatech-tf-state-bucket" # local.bucket_name value
     key            = "tf-infra/terraform.tfstate"
-    region         = "us-east-1" # local.aws_region value
+    region         = "us-east-1"                     # local.aws_region value
     dynamodb_table = "ubicatech-tf-state-lock-table" # local.table_name value
     encrypt        = true
   }
@@ -44,9 +44,9 @@ module "db" {
   cc_private_subnets      = module.ccVPC.private_subnets
   cc_private_subnet_cidrs = local.private_subnet_cidrs
 
-  db_az            = local.availability_zones[0]
-  db_name          = local.db_name
-  db_username      = local.db_username
+  db_az       = local.availability_zones[0]
+  db_name     = local.db_name
+  db_username = local.db_username
 }
 
 module "migration" {
@@ -60,7 +60,7 @@ module "migration" {
 }
 
 provider "aws" {
-  region = local.aws_region
+  region     = local.aws_region
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
 }
