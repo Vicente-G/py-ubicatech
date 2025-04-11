@@ -1,4 +1,4 @@
-/* terraform {
+terraform {
   backend "s3" {
     bucket         = "ubicatech-tf-state-bucket" # local.bucket_name value
     key            = "tf-infra/terraform.tfstate"
@@ -15,17 +15,17 @@
   }
 }
 
-module "tf-state" {
-  source      = "./modules/tf-state"
-  bucket_name = local.bucket_name
-  table_name  = local.table_name
-}
+# Enable only on case of full destruction of the infrastructure
+# module "tf-state" {
+#   source      = "./modules/tf-state"
+#   bucket_name = local.bucket_name
+#   table_name  = local.table_name
+# }
 
-module "ubicatechVPC" {
+module "ccVPC" {
   source = "./modules/vpc"
 
   vpc_cidr             = local.vpc_cidr
-  vpc_tags             = var.vpc_tags
   availability_zones   = local.availability_zones
   public_subnet_cidrs  = local.public_subnet_cidrs
   private_subnet_cidrs = local.private_subnet_cidrs
@@ -40,43 +40,27 @@ module "ecrRepo" {
 module "db" {
   source = "./modules/db"
 
-  cc_vpc_id               = module.ubicatechVPC.vpc_id
-  cc_private_subnets      = module.ubicatechVPC.private_subnets
+  cc_vpc_id               = module.ccVPC.vpc_id
+  cc_private_subnets      = module.ccVPC.private_subnets
   cc_private_subnet_cidrs = local.private_subnet_cidrs
 
   db_az            = local.availability_zones[0]
-  db_name          = "ccDatabaseInstance"
-  db_user_name     = var.db_user_name
-  db_user_password = var.db_user_password
+  db_name          = local.db_name
+  db_username      = local.db_username
 }
 
 module "migration" {
   source = "./modules/migration"
 
-  cc_vpc_id         = module.ubicatechVPC.vpc_id
-  cc_public_subnets = module.ubicatechVPC.public_subnets
-}
- */
-
-#Preparativos finales para el proyecto de terraform
-terraform {
-  required_version = "~> 1.3"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.0"
-    }
-  }
+  cc_vpc_id         = module.ccVPC.vpc_id
+  cc_public_subnets = module.ccVPC.public_subnets
+  rds_instance_url  = "postgresql://${module.db.rds_credentials}@${module.db.rds_endpoint}"
+  git_repo_url      = local.git_repo_url
+  git_repo_branch   = local.git_repo_branch
 }
 
 provider "aws" {
-  region = "us-east-1"
-}
-
-resource "aws_vpc" "ubicatech" {
-  cidr_block = "10.0.0.0/16"
-  tags ={
-    Name = "ubicatech-vpc"
-    project = "ubicatech"
-  }
+  region = local.aws_region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
 }
