@@ -7,11 +7,11 @@ locals {
   aws_region = "us-east-1"
 
   # Database Configuration
-  db_name = "ubicatech"
+  db_name     = "ubicatech"
   db_username = "ubicatech"
 
   # Git Repo Configuration
-  git_repo_url = "https://github.com/Vicente-G/py-ubicatech.git"
+  git_repo_url    = "https://github.com/Vicente-G/py-ubicatech.git"
   git_repo_branch = "dev"
 
   # AWS ECR

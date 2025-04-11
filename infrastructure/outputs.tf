@@ -3,12 +3,12 @@ output "aws_region" {
 }
 
 output "aws_access_key" {
-  value = var.aws_access_key
+  value     = var.aws_access_key
   sensitive = true
 }
 
 output "aws_secret_key" {
-  value = var.aws_secret_key
+  value     = var.aws_secret_key
   sensitive = true
 }
 
@@ -21,6 +21,6 @@ output "ecr_repo_url" {
 }
 
 output "rds_instance_url" {
-  value = "postgresql://${module.db.rds_credentials}@${module.db.rds_endpoint}"
+  value     = "postgresql://${module.db.rds_credentials}@${module.db.rds_endpoint}"
   sensitive = true
 }
