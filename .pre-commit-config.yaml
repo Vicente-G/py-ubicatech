@@ -19,7 +19,6 @@ repos:
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
       - id: detect-private-key
-      - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
       - id: check-yaml
@@ -32,6 +31,7 @@ repos:
       - id: ruff
         stages: [pre-push]
       - id: ruff-format
+        args: [--line-length=100]
 
   - repo: https://github.com/pycqa/bandit
     rev: 1.8.3
