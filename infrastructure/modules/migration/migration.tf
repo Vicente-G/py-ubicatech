@@ -1,4 +1,4 @@
-resource "aws_security_group" "ccWebserverSecurityGroup" {
+resource "aws_security_group" "ccMigrationSecurityGroup" {
   name        = "allow_ssh_http"
   description = "Allow ssh http inbound traffic"
   vpc_id      = var.cc_vpc_id
@@ -19,80 +19,35 @@ resource "aws_security_group" "ccWebserverSecurityGroup" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name    = "ccWebserverSecurityGroup"
-    Project = "CC TF Demo"
-  }
 }
 
-resource "aws_lb" "ccLoadBalancer" {
-  load_balancer_type = "application"
-  subnets            = [var.cc_public_subnets[0].id, var.cc_public_subnets[1].id]
-  security_groups    = [aws_security_group.ccWebserverSecurityGroup.id]
-  tags = {
-    Name    = "ccLoadBalancer"
-    Project = "CC TF Demo"
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
+
+  owners = ["099720109477"] # Canonical
 }
 
-resource "aws_lb_listener" "ccLbListener" {
-  load_balancer_arn = aws_lb.ccLoadBalancer.arn
-
-  port     = 80
-  protocol = "HTTP"
-
-  default_action {
-    target_group_arn = aws_lb_target_group.ccTargetGroup.id
-    type             = "forward"
-  }
-}
-
-resource "aws_lb_target_group" "ccTargetGroup" {
-  name     = "example-target-group"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.cc_vpc_id
-
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    matcher             = "200"
-    interval            = 15
-    timeout             = 3
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-  }
-  tags = {
-    Name    = "ccTargetGroup"
-    Project = "CC TF Demo"
-  }
-}
-
-resource "aws_lb_target_group_attachment" "webserver1" {
-  target_group_arn = aws_lb_target_group.ccTargetGroup.arn
-  target_id        = aws_instance.webserver1.id
-  port             = 80
-}
-
-resource "aws_instance" "webserver1" {
-  ami                         = local.ami_id
-  instance_type               = local.instance_type
-  key_name                    = local.key_name
+resource "aws_instance" "atlas_migration" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t2.micro"
   subnet_id                   = var.cc_public_subnets[0].id
-  security_groups             = [aws_security_group.ccWebserverSecurityGroup.id]
+  security_groups             = [aws_security_group.ccMigrationSecurityGroup.id]
   associate_public_ip_address = true
 
-  # Add migration files to the instance
-
-  # Change to Atlas installation, and migration running
   user_data = <<-EOF
               #!/bin/bash -xe
-              sudo su
-              yum update -y
-              yum install -y httpd
-              echo "<h1>Hello, World!</h1>server: ccWebServer1" > /var/www/html/index.html
-              echo "healthy" > /var/www/html/hc.html
-              service httpd start
+              curl -sSfL https://atlasgo.sh -o install.sh
+              chmod +x install.sh
+              ./install.sh
+              git clone -n --depth=1 --no-single-branch --filter=tree:0 ${var.git_repo_url}
+              cd py-ubicatech
+              git sparse-checkout set --no-cone /migrations
+              git checkout ${var.git_repo_branch}
+              atlas --config file://migrations/atlas/atlas.hcl --env tf --url ${var.rds_instance_url} migrate apply
               EOF
 }

@@ -31,3 +31,18 @@ variable "ingress_rules" {
     }
   ]
 }
+
+variable "rds_instance_url" {
+  description = "RDS Endpoint"
+  type        = string
+}
+
+variable "git_repo_url" {
+  description = "Git Repo URL"
+  type        = string
+}
+
+variable "git_repo_branch" {
+  description = "Git Repo Branch"
+  type        = string
+}
