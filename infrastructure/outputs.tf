@@ -1,7 +1,26 @@
-output "vpc_id" {
-  value = module.ccVPC.vpc_id
+output "aws_region" {
+  value = local.aws_region
 }
 
-output "load_balancer_dns_name" {
-  value = module.migration.load_balancer_dns_name
+output "aws_access_key" {
+  value = var.aws_access_key
+  sensitive = true
+}
+
+output "aws_secret_key" {
+  value = var.aws_secret_key
+  sensitive = true
+}
+
+output "ec2_instance_id" {
+  value = aws_instance.ccMigration.id
+}
+
+output "ecr_repo_url" {
+  value = module.ecrRepo.ecr_repo_url
+}
+
+output "rds_instance_url" {
+  value = "postgresql://${module.db.rds_credentials}@${module.db.rds_endpoint}"
+  sensitive = true
 }
