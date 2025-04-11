@@ -16,17 +16,12 @@ A Terraform/Ansible pipeline to provision AWS with the infrastructure require to
 uv sync
 ```
 
-2. Setup environment variables to be used on terraform's tfvars:
-```sh
-cp sample.terraform.tfvars terraform.tfvars
-```
-
-3. Initialize repo adding providers and module references:
+2. Initialize repo adding providers and module references:
 ```sh
 uv run task compile
 ```
 
-4. Configure the AWS CLI using the following command:
+3. Configure the AWS CLI using the following command:
 ```sh
 uv run task aws-config
 ```
@@ -43,7 +38,7 @@ uv run task plan
 uv run task apply
 ```
 
-3. From the terraform's output put the variables into the environment.
+3. From the terraform's outputs put the variables into the environment.
 Also add the ECR's password from the output of:
 ```sh
 uv run task ecr-login
