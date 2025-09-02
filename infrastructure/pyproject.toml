@@ -1,0 +1,25 @@
+[project]
+name = "ansible-solo-uno"
+version = "0.1.0"
+description = "Environment for Ansible SoloUno project to run on"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ansible>=10.7.0",
+    "boto3>=1.37.31",
+    "botocore>=1.37.31",
+    "requests>=2.32.3",
+    "taskipy>=1.14.1",
+]
+
+[tool.taskipy.tasks]
+check = "terraform validate"
+lint = "terraform fmt -check"
+format = "terraform fmt"
+compile = "terraform init"
+plan = "terraform plan"
+apply = "terraform apply -auto-approve"
+aws-config = "aws configure"
+ecr-login = "aws ecr get-login-password"
+post-apply = "ansible-playbook playbooks/post_provisioning.yml"
+destroy = "terraform destroy -auto-approve"
